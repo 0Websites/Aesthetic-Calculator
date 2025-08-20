@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Full Screen White Calculator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'poppins', sans-serif;
+    }
+
+    body {
+      height: 100%;
+      background: #fefefe;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      background-size: contain;
+      padding-top: 40px;
+      /* font-family: 'Poppins', sans-serif; */
+    }
+
+    .calculator {
+      width: 80%;
+      height: 100%;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    input {
+      font-family: 'digital-7';
+    }
+
+    .display {
+      width: 100%;
+      height: 100px;
+      font-family: 'digital-7';
+      font-size: 3.5rem;
+      text-align: right;
+      padding: 20px;
+      border: none;
+      border-radius: 15px;
+      background: #f9f9f9;
+      box-shadow: inset 3px 3px 0px rgba(0, 0, 0, 0.1), inset -3px -3px 0px rgba(255, 255, 255, 0.8);
+    }
+
+    .buttons {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      gap: 20px;
+    }
+
+    .button {
+      position: relative;
+      display: inline-block;
+      margin: 10px;
+      user-select: none;
+      -moz-user-select: none;
+      outline: none;
+    }
+
+    .button {
+      color: white;
+      font-family: Helvetica, sans-serif;
+      font-weight: bold;
+      font-size: 36px;
+      text-align: center;
+      text-decoration: none;
+      background-color: #ff8c00;
+      display: block;
+      position: relative;
+      padding: 10px;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      text-shadow: 0px 1px 0px #000;
+      filter: dropshadow(color=#000, offx=0px, offy=1px);
+      -webkit-box-shadow: inset 0 1px 0 #ffe2d8, 0 10px 0 #912700;
+      -moz-box-shadow: inset 0 1px 0 #ffe2d8, 0 10px 0 #912700;
+      box-shadow: inset 0 1px 0 #ffe2d8, 0 10px 0 #912700;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    .button:active {
+      top: 10px;
+      background-color: #F78900;
+      -webkit-box-shadow: inset 0 1px 0 #FFE5C4, inset 0 -3px 0 #915100;
+      -moz-box-shadow: inset 0 1px 0 #FFE5C4, inset 0 -3pxpx 0 #915100;
+      box-shadow: inset 0 1px 0 #FFE5C4, inset 0 -3px 0 #915100;
+    }
+
+    .button:after {
+      content: "";
+      height: 100%;
+      width: 100%;
+      padding: 4px;
+      position: absolute;
+      bottom: -15px;
+      left: -4px;
+      z-index: -1;
+      background-color: #000000;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;
+    }
+
+    .button:active,
+    .button.active {
+      top: 10px;
+      background-color: #F78900;
+      -webkit-box-shadow: inset 0 1px 0 #FFE5C4, inset 0 -3px 0 #915100;
+      -moz-box-shadow: inset 0 1px 0 #FFE5C4, inset 0 -3pxpx 0 #915100;
+      box-shadow: inset 0 1px 0 #FFE5C4, inset 0 -3px 0 #915100;
+    }
+
+    #equal {
+      grid-column: span 2;
+      background: #ff8c00;
+    }
+
+    #button-bg {
+      background: #fff;
+      color: #585858;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="calculator">
+    <input type="text" class="display" id="display" disabled>
+    <div class="buttons">
+      <button class="button">(</button>
+      <button class="button">)</button>
+      <button class="button">C</button>
+      <button class="button">/</button>
+
+      <button class="button" id="button-bg">7</button>
+      <button class="button" id="button-bg">8</button>
+      <button class="button" id="button-bg">9</button>
+      <button class="button">*</button>
+
+      <button class="button" id="button-bg">4</button>
+      <button class="button" id="button-bg">5</button>
+      <button class="button" id="button-bg">6</button>
+      <button class="button">-</button>
+
+      <button class="button" id="button-bg">1</button>
+      <button class="button" id="button-bg">2</button>
+      <button class="button" id="button-bg">3</button>
+      <button class="button">+</button>
+
+      <button class="button" id="button-bg">0</button>
+      <button class="button" id="button-bg">.</button>
+      <button id="equal" class="button">=</button>
+    </div>
+  </div>
+  <script>
+    const display = document.getElementById("display");
+    const buttons = document.querySelectorAll("button");
+
+    // ✅ Simple click sound (use your own mp3/wav file if you want)
+    const clickSound = new Audio("sfx.mp3");
+
+    function playSound() {
+      clickSound.currentTime = 0;
+      clickSound.play();
+    }
+
+    // Button click handling
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        playSound();
+
+        // ✅ remove focus so Enter won't re-trigger it
+        btn.blur();
+
+        if (btn.innerText === "C") {
+          display.value = "";
+        } else if (btn.innerText === "=") {
+          try {
+            display.value = eval(display.value);
+          } catch {
+            display.value = "Error";
+          }
+        } else {
+          display.value += btn.innerText;
+        }
+      });
+    });
+
+    // ✅ Keyboard support + button highlight
+    document.addEventListener("keydown", (e) => {
+      let key = e.key;
+
+      if ((key >= "0" && key <= "9") || ["+", "-", "*", "/", ".", "(", ")"].includes(key)) {
+        display.value += key;
+        highlightButton(key);
+        playSound();
+      } else if (key === "Enter") {
+        try {
+          display.value = eval(display.value);
+        } catch {
+          display.value = "Error";
+        }
+        highlightButton("=");
+        playSound();
+      } else if (key === "Backspace") {
+        display.value = display.value.slice(0, -1);
+      } else if (key.toLowerCase() === "c") {
+        display.value = "";
+        highlightButton("C");
+        playSound();
+      }
+    });
+
+    // Function to highlight the correct button
+    function highlightButton(key) {
+      buttons.forEach(btn => {
+        if (btn.innerText === key) {
+          btn.classList.add("active");
+          setTimeout(() => btn.classList.remove("active"), 150);
+        }
+        if (key === "Enter" && btn.innerText === "=") {
+          btn.classList.add("active");
+          setTimeout(() => btn.classList.remove("active"), 150);
+        }
+      });
+    }
+  </script>
+
+
+  <div id="fullscreenToggle" style="position: fixed; top: 15px; left: 15px; padding: 10px 20px;
+         border-radius: 8px; border: none; cursor: pointer;
+         background: #ebebeb; color: #333333; font-size: 14px; z-index: 1000;">
+    ⛶
+  </div>
+
+  <script>
+    const fullscreenBtn = document.getElementById("fullscreenToggle");
+
+    fullscreenBtn.addEventListener("click", () => {
+      if (!document.fullscreenElement) {
+        // Enter fullscreen
+        document.documentElement.requestFullscreen().catch(err => {
+          alert(`Error attempting to enable fullscreen: ${err.message}`);
+        });
+        fullscreenBtn.textContent = "X";
+      } else {
+        // Exit fullscreen
+        document.exitFullscreen();
+        fullscreenBtn.textContent = "X";
+      }
+    });
+
+    document.addEventListener("fullscreenchange", () => {
+      if (!document.fullscreenElement) {
+        fullscreenBtn.textContent = "⛶";
+      }
+    });
+  </script>
+
+
+  <div id="darkToggle" style="position: fixed; top: 15px; right: 15px; padding: 10px 20px; 
+         border-radius: 8px; border: none; cursor: pointer; 
+         background: #ebebeb; color: #333333; font-size: 14px; z-index: 1000;">
+    Dark
+  </div>
+
+  <style>
+    body.dark-mode {
+      background: #1e1e1e;
+      color: #f1f1f1;
+    }
+
+    body.dark-mode .display {
+      background: #2a2a2a;
+      color: #e64a19;
+      box-shadow: inset 3px 3px 0px rgba(0, 0, 0, 0.4), inset -3px -3px 0px rgba(255, 255, 255, 0.05);
+    }
+
+    body.dark-mode .button {
+      -webkit-box-shadow: inset 0 1px 0 #ffe2d8, 0 10px 0 #912700;
+      -moz-box-shadow: inset 0 1px 0 #ffe2d8, 0 10px 0 #912700;
+      box-shadow: inset 0 1px 0 #ffe2d8, 0 10px 0 #912700;
+    }
+
+    body.dark-mode #button-bg {
+      -webkit-box-shadow: inset 0 1px 0 #ffe2d8, 0 10px 0 #b5b5b5;
+      -moz-box-shadow: inset 0 1px 0 #ffe2d8, 0 10px 0 #b5b5b5;
+      box-shadow: inset 0 1px 0 #ffe2d8, 0 10px 0 #b5b5b5;
+    }
+
+    body.dark-mode .button:active {
+      box-shadow: inset 0 1px 0 #232323, inset 0 -3px 0 #262626;
+    }
+
+    body.dark-mode #darkToggle {
+      background: #f1f1f1;
+      color: #111;
+    }
+  </style>
+
+  <script>
+    const toggleBtn = document.getElementById("darkToggle");
+
+    toggleBtn.addEventListener("click", () => {
+      document.body.classList.toggle("dark-mode");
+      toggleBtn.textContent = document.body.classList.contains("dark-mode")
+        ? "Light"
+        : "Dark";
+    });
+  </script>
+</body>
+
+</html>
