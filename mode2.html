@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Full Screen White Calculator</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="mode2-style.css">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
@@ -18,17 +19,17 @@
   <div id="fullscreenToggle">
     ⛶
   </div>
-  <a href="mode2.html">
+  <a href="index.html">
     <div id="mode">
       Mode
     </div>
   </a>
-
-  <div id="clearHistory">
+    <div id="clearHistory">
     Clear history
   </div>
 
-  <div class="calculator">
+
+ <div class="calculator">
     <input type="text" class="display" id="display" disabled>
     <div class="buttons">
       <button class="button">(</button>
@@ -55,10 +56,9 @@
       <button class="button" id="button-bg">.</button>
       <button id="equal" class="button">=</button>
     </div>
+   
   </div>
-  <div id="history" style="margin-top:10px; font-size:14px; color:gray;">
-  </div>
+   <div id="history"></div>
 </body>
 <script src="script.js"></script>
-
 </html>
